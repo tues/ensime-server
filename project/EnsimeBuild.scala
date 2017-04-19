@@ -25,7 +25,7 @@ object ProjectPlugin extends AutoPlugin {
   override def buildSettings = Seq(
     scalaVersion := "2.12.1",
     organization := "org.ensime",
-    version := "2.0.0-SNAPSHOT",
+    version := "2.0.0-M1",
 
     ensimeIgnoreMissingDirectories := true,
 
