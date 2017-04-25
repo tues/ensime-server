@@ -15,7 +15,7 @@ addSbtPlugin("org.scalariform" % "sbt-scalariform" % "1.5.1")
 // https://github.com/scoverage/sbt-coveralls/issues/52
 //addSbtPlugin("org.scoverage" %% "sbt-coveralls" % "1.0.1")
 
-addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.1")
+addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.4" exclude("org.apache.maven", "maven-plugin-api"))
 
 scalacOptions in Compile ++= Seq("-feature", "-deprecation")
 
