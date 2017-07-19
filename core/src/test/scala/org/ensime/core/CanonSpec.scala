@@ -3,19 +3,17 @@
 package org.ensime.core
 
 import java.io.File
-import java.nio.file._
 
-import scala.util.Properties.jdkHome
-
-import org.ensime.util.file._
-import org.ensime.util.path._
+import org.ensime.api._
 import org.ensime.util.ensimefile._
 import org.ensime.util.EnsimeSpec
-import org.ensime.api._
+import org.ensime.util.file._
+import org.ensime.util.path._
+import org.ensime.util.fixtures.JdkSrcFixture
 
 // this test is mostly showing what Canon can do, we're testing
 // shapeless more than our specific Poly1.
-class CanonSpec extends EnsimeSpec {
+class CanonSpec extends EnsimeSpec with JdkSrcFixture {
 
   val file = new File(".")
   val canon = file.canon
@@ -66,9 +64,8 @@ class CanonSpec extends EnsimeSpec {
 
   it should "canon an ArchiveFile" in withTempDir { dir =>
     val rawDir = RawFile(dir.toPath)
-    val src = Paths.get(jdkHome) / "src.zip"
 
-    val entry = EnsimeFile(s"$src!/java/lang/String.java")
+    val entry = EnsimeFile(s"$jdkSrc!/java/lang/String.java")
     val extracted = RawFile(dir.toPath / "dep-src/source-jars/java/lang/String.java")
 
     val ef = List(entry)

@@ -171,6 +171,7 @@ object EnsimeBuild {
   lazy val core = Project("core", file("core")).dependsOn(
     api, s_express, monkeys, util,
     api % "test->test", // for the interpolator
+    util % "test->test", // for fixtures.JdkSrcFixture
     testutil % "test,it",
     // depend on "it" dependencies in Test or sbt adds them to the release deps!
     // https://github.com/sbt/sbt/issues/1888

@@ -6,18 +6,15 @@ import java.io.File
 import java.net._
 import java.nio.file._
 
-import scala.util.Properties.jdkHome
-
 import org.ensime.api._
 import org.ensime.util.LegacyArchiveExtraction
 import org.ensime.util.ensimefile.Implicits.DefaultCharset
 import org.ensime.util.file.withTempDir
+import org.ensime.util.fixtures.JdkSrcFixture
 import org.ensime.util.path._
 import org.scalatest._
 
-class EnsimeFileSpec extends FlatSpec with Matchers {
-
-  lazy val src: Path = Paths.get(jdkHome) / "src.zip"
+class EnsimeFileSpec extends FlatSpec with Matchers with JdkSrcFixture {
 
   "EnsimeFile" should "construct instances from file paths" in {
     val filepath = "/foo/bar/baz.scala"
@@ -41,6 +38,7 @@ class EnsimeFileSpec extends FlatSpec with Matchers {
   }
 
   it should "create instances from URLs" in {
+    val src = jdkSrc
     val srcUrl = src.toUri.toURL
 
     EnsimeFile(srcUrl) shouldBe RawFile(src)
@@ -76,19 +74,20 @@ class EnsimeFileSpec extends FlatSpec with Matchers {
 
   it should "check for jar and entry existence with exists()" in {
     EnsimeFile("there-is-no.jar!/thing").exists() shouldBe false
-    EnsimeFile(s"$src!/java/lang/String.java").exists() shouldBe true
-    EnsimeFile(s"$src!/java/lang/Ensime.scala").exists() shouldBe false
+
+    EnsimeFile(s"$jdkSrc!/java/lang/String.java").exists() shouldBe true
+    EnsimeFile(s"$jdkSrc!/java/lang/Ensime.scala").exists() shouldBe false
   }
 
   it should "load entry contents with readStringDirect()" in {
-    EnsimeFile(s"$src!/java/lang/String.java").readStringDirect().contains("-6849794470754667710L") shouldBe true
+    EnsimeFile(s"$jdkSrc!/java/lang/String.java").readStringDirect().contains("-6849794470754667710L") shouldBe true
   }
 
   "LegacyArchiveExtraction" should "extract zips" in withTempDir { dir =>
     val extractor = new LegacyArchiveExtraction(dir.toPath)
     val extracted = dir.toPath / "dep-src/source-jars/java/lang/String.java"
 
-    extractor.write(EnsimeFile(s"$src!/java/lang/String.java")) shouldBe RawFile(extracted)
+    extractor.write(EnsimeFile(s"$jdkSrc!/java/lang/String.java")) shouldBe RawFile(extracted)
 
     extracted.toFile should be a 'exists
 
